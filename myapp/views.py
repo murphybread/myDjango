@@ -1,5 +1,6 @@
 from django.shortcuts import render, HttpResponse
 import random
+from django.views.decorators.csrf import csrf_exempt
 
 
 topics = [
@@ -21,6 +22,9 @@ def HTMLTemplate(article):
             {ol}
         </ol>
         {article}
+        <ul>
+            </li><a href="/create/">create</a></li>
+        </ul>
     
     </body>
     </html>
@@ -35,8 +39,16 @@ def index(request):
     return HttpResponse(HTMLTemplate(article))
 
 
+@csrf_exempt
 def create(request):
-    return HttpResponse("Create")
+    article = """
+        <form action="/create/" method="post">
+            <p><input type="text" placeholder="title" name="title"></p>
+            <p><textarea name="body" placeholder="body" ></textarea></p>
+            <p><input type="submit"></p>
+        </form>
+    """
+    return HttpResponse(HTMLTemplate(article))
 
 
 def read(request, id):
