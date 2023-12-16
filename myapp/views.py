@@ -9,28 +9,30 @@ topics = [
 ]
 
 
-# Create your views here.
-def index(request):
-    global topics
+def HTMLTemplate(article):
     ol = ""
     for topic in topics:
         ol += f'<li><a href="/read/{topic["id"]}">{topic["title"]}</a></li>'
-    return HttpResponse(
-        f"""
+    return f"""
     <html>
     <body>
-        <h1>Django</h1>
+        <h1><a href= "/">Django</a></h1>
         <ol>
             {ol}
         </ol>
-        <h2> Welcom </h2>
-        Hello, Django
-    
+        {article}
     
     </body>
     </html>
     """
-    )
+
+
+# Create your views here.
+def index(request):
+    global topics
+
+    article = "<h2>welcome</h2> HelloDjango"
+    return HttpResponse(HTMLTemplate(article))
 
 
 def create(request):
@@ -38,4 +40,9 @@ def create(request):
 
 
 def read(request, id):
-    return HttpResponse("Read" + id)
+    global topics
+
+    for topic in topics:
+        if topic["id"] == int(id):
+            article = f'<h2>{topic["title"]}</h2> {topic["body"]}'
+    return HttpResponse(HTMLTemplate(article))
